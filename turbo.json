@@ -8,15 +8,6 @@
       "cache": false,
       "persistent": true
     },
-    "build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "outputs": [
-        ".next/**",
-        "!.next/cache/**"
-      ]
-    },
     "lint": {},
     "test": {},
     "test:e2e": {}
