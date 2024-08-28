@@ -13,18 +13,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Customer {
+model Report {
   id         Int       @id @default(autoincrement())
-  firstName  String
-  lastName   String
-  email      String    @unique
-  phone      String
-  city       String
-  state      String
-  zipCode    String
-  country    String
-  isVerified Boolean
+  status     String
+  url        String?
+  error      String?
+
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
-  deletedAt  DateTime?
 }

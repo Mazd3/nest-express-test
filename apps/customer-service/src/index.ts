@@ -1,9 +1,6 @@
 import express from 'express';
 import morgan from 'morgan';
-import { PrismaClient } from '@prisma/client';
 import { faker } from '@faker-js/faker';
-
-const prisma = new PrismaClient();
 
 const app = express();
 
@@ -11,29 +8,13 @@ app.use(morgan('dev'));
 
 app.get('/customers', async (req, res) => {
   const page = Number(req.query.page) || 1;
-  const limit = Number(req.query.limit) || 10;
-
-  const customers = await prisma.customer.findMany({
-    skip: (page - 1) * limit,
-    take: limit,
-  });
-
-  res.send(customers);
-});
-
-app.get('/fake', (req, res) => {
-  const count = Number(req.query.count) || 100;
-
-  if (count > 1000) {
-    res.status(400).send('Count cannot be greater than 1000');
-    return;
-  }
+  const limit = Number(req.query.limit) || 100;
 
   const customers = [];
 
-  for (let i = 0; i < count; i++) {
+  for (let i = 0; i < limit; i++) {
     const customer = {
-      id: i + 1,
+      id: (page - 1) * limit + i + 1,
       firstName: faker.person.firstName(),
       lastName: faker.person.lastName(),
       email: faker.internet.email(),
@@ -49,18 +30,7 @@ app.get('/fake', (req, res) => {
     };
     customers.push(customer);
   }
-
-  prisma.customer
-    .createMany({
-      data: customers,
-    })
-    .then(() => {
-      res.send('Customers created successfully');
-    })
-    .catch((error) => {
-      console.error('Error creating customers:', error);
-      res.status(500).send('Error creating customers');
-    });
+  res.send(customers);
 });
 
 app.listen(3001, () => {
